@@ -31,7 +31,7 @@ if os.path.exists(file_path):
 
         # Intake semester filter
         if "Intake Semester" in df.columns:
-            intake_options = ["All", "Winter", "Summer"]
+            intake_options = ["All", "Winter", "Summer", "Winter and summer"]
             intake_filter = st.sidebar.selectbox("📅 Intake Semester", intake_options)
             if intake_filter != "All":
                 df = df[df["Intake Semester"].str.lower() == intake_filter.lower()]
