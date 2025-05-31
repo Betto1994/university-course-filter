@@ -22,12 +22,12 @@ if os.path.exists(file_path):
         # Filters
         st.sidebar.header("📊 Filter Options")
 
-        # Tuition fee filter
+        # Tuition fee filter based on 'Y' or 'N'
         fee_filter = st.sidebar.selectbox("💰 Tuition Fees", options=["All", "Free", "Paid"])
         if fee_filter == "Free":
-            df = df[df["Tuition Fee"].str.lower().str.contains("free")]
+            df = df[df["Tuition Fees"].str.upper() == "N"]
         elif fee_filter == "Paid":
-            df = df[df["Tuition Fee"].str.lower().str.contains("€")]
+            df = df[df["Tuition Fees"].str.upper() == "Y"]
 
         # Degree level filter
         if "Degree Level" in df.columns:
