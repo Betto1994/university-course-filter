@@ -44,4 +44,5 @@ if os.path.exists(file_path):
         st.error("❌ Error reading the Excel file.")
         st.exception(e)
 else:
-    st.error("📁 'universities_courses.xlsx' not found in the repository. Please upload it to GitHub."
+    st.error("📁 'universities_courses.xlsx' not found in the repository. Please upload it to GitHub.")
+
