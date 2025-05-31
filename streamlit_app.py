@@ -1,36 +1,47 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
+import os
 
-# Load CSV data
-df = pd.read_csv("universities_courses.csv")
+st.set_page_config(page_title="University Course Explorer", layout="wide")
+st.title("🎓 University Course Explorer in Germany")
 
-st.title("🎓 German University Course Finder")
+file_path = "universities_courses.xlsx"
 
-# Tuition filter
-tuition_filter = st.selectbox("Tuition", ["All", "Free only", "Paid only"])
-if tuition_filter == "Free only":
-    df = df[df["tuition_eur"] == 0]
-elif tuition_filter == "Paid only":
-    df = df[df["tuition_eur"] > 0]
+# Check if file exists
+if os.path.exists(file_path):
+    try:
+        # Load Excel file
+        df = pd.read_excel(file_path)
 
-# Language filter
-language = st.selectbox("Language", ["All"] + sorted(df["language"].unique()))
-if language != "All":
-    df = df[df["language"] == language]
+        st.success("Excel file loaded successfully.")
 
-# Location filter
-location = st.selectbox("Location", ["All"] + sorted(df["location"].unique()))
-if location != "All":
-    df = df[df["location"] == location]
+        # Show data preview
+        with st.expander("🔍 Preview Dataset"):
+            st.dataframe(df)
 
-# Degree type filter
-degree = st.selectbox("Degree", ["All"] + sorted(df["degree_type"].unique()))
-if degree != "All":
-    df = df[df["degree_type"] == degree]
+        # Filters
+        st.sidebar.header("📊 Filter Options")
 
-# Show results
-st.subheader(f"📚 Found {len(df)} matching courses")
-st.dataframe(df)
+        # Tuition fee filter
+        fee_filter = st.sidebar.selectbox("💰 Tuition Fees", options=["All", "Free", "Paid"])
+        if fee_filter == "Free":
+            df = df[df["Tuition Fee"].str.lower().str.contains("free")]
+        elif fee_filter == "Paid":
+            df = df[df["Tuition Fee"].str.lower().str.contains("€")]
 
-# Download button
-st.download_button("📥 Download CSV", df.to_csv(index=False), "filtered_courses.csv")
+        # Degree level filter
+        if "Degree Level" in df.columns:
+            degrees = ["All"] + sorted(df["Degree Level"].dropna().unique().tolist())
+            degree_filter = st.sidebar.selectbox("🎓 Degree Level", degrees)
+            if degree_filter != "All":
+                df = df[df["Degree Level"] == degree_filter]
+
+        st.subheader("🎯 Filtered Results")
+        st.write(f"Total programs found: {len(df)}")
+        st.dataframe(df.reset_index(drop=True))
+
+    except Exception as e:
+        st.error("❌ Error reading the Excel file.")
+        st.exception(e)
+else:
+    st.error("📁 'universities_courses.xlsx' not found in the repository. Please upload it to GitHub."
