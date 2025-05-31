@@ -11,7 +11,7 @@ file_path = "universities_courses.xlsx"
 if os.path.exists(file_path):
     try:
         # Load Excel file
-        df = pd.read_excel(file_path)
+        df = pd.read_excel(file_path, sheet_name="Data base")
 
         st.success("Excel file loaded successfully.")
 
