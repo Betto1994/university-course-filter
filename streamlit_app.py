@@ -29,6 +29,13 @@ if os.path.exists(file_path):
         elif fee_filter == "Paid":
             df = df[df["Tuition Fees"].str.upper() == "Y"]
 
+        # Intake semester filter
+        if "Intake Semester" in df.columns:
+            intake_options = ["All", "Winter", "Summer"]
+            intake_filter = st.sidebar.selectbox("📅 Intake Semester", intake_options)
+            if intake_filter != "All":
+                df = df[df["Intake Semester"].str.lower() == intake_filter.lower()]
+
         # Degree level filter
         if "Degree Level" in df.columns:
             degrees = ["All"] + sorted(df["Degree Level"].dropna().unique().tolist())
