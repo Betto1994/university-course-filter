@@ -36,6 +36,15 @@ if os.path.exists(file_path):
             if intake_filter != "All":
                 df = df[df["Intake Semester"].str.lower() == intake_filter.lower()]
 
+        # 📌 👉 Paste this: APPLICATION FEES Filter
+        fee_filter = st.selectbox("💸 Filter by Application Fees:", ["All", "Yes", "No", "Blank"])
+        if fee_filter == "Yes":
+            df = df[df["Application Fees"] == "Y"]
+        elif fee_filter == "No":
+            df = df[df["Application Fees"] == "N"]
+        elif fee_filter == "Blank":
+            df = df[df["Application Fees"].isna() | (df["Application Fees"] == "")]
+
         # Degree level filter
         if "Degree Level" in df.columns:
             degrees = ["All"] + sorted(df["Degree Level"].dropna().unique().tolist())
